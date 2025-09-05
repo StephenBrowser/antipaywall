@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Archived Article Viewer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background: #1e1e2f;
+      padding: 1rem;
+      color: white;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+
+    .search-container {
+      background: #fff;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .search-bar {
+      width: 90%;
+      max-width: 700px;
+      display: flex;
+      margin-bottom: 1rem;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px 0 0 5px;
+    }
+
+    .search-bar button {
+      padding: 0.75rem 1rem;
+      background: #0066cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .button-group button {
+      background: #ddd;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .button-group button.active,
+    .button-group button:hover {
+      background: #007acc;
+      color: white;
+    }
+
+    iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <header>📚 Archived Article Viewer</header>
+
+  <div class="search-container">
+    <div class="search-bar">
+      <input type="text" id="urlInput" placeholder="Paste article URL here..." />
+      <button onclick="updateFrame()">Load</button>
+    </div>
+
+    <div class="button-group">
+      <button onclick="selectService('wayback')" class="active">Wayback</button>
+      <button onclick="selectService('archiveis')">Archive.is</button>
+      <button onclick="selectService('periscope')">Periscope</button>
+      <button onclick="selectService('accessarticle')">AccessArticle</button>
+    </div>
+  </div>
+
+  <iframe id="viewerFrame" src=""></iframe>
+
+  <script>
+    let selectedService = 'wayback';
+
+    function selectService(service) {
+      selectedService = service;
+
+      document.querySelectorAll('.button-group button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      event.target.classList.add('active');
+
+      updateFrame();
+    }
+
+    function updateFrame() {
+      const url = document.getElementById('urlInput').value.trim();
+      const iframe = document.getElementById('viewerFrame');
+
+      if (!url) {
+        alert("Please enter a URL.");
+        return;
+      }
+
+      // Default: set iframe src
+      let finalURL = '';
+      let openInNewTab = false;
+
+      switch (selectedService) {
+        case 'wayback':
+          // Use "web/0/" to get the most recent snapshot
+          finalURL = `https://web.archive.org/web/0/${url}`;
+          break;
+
+        case 'archiveis':
+          // Open in a new about:blank tab
+          finalURL = `https://archive.is/?run=1&url=${encodeURIComponent(url)}`;
+          openInNewTab = true;
+          break;
+
+        case 'periscope':
+          finalURL = `https://periscope.corsfix.com/?${url}`;
+          break;
+
+        case 'accessarticle':
+          finalURL = `https://accessarticlenow.com/api/c/full?q=${encodeURIComponent(url)}`;
+          break;
+      }
+
+      if (openInNewTab) {
+        const newTab = window.open("about:blank", "_blank");
+        if (newTab) {
+          newTab.location = finalURL;
+        } else {
+          alert("Popup blocked. Please allow popups for this site.");
+        }
+      } else {
+        iframe.src = finalURL;
+      }
+    }
+  </script>
+</body>
+</html>
