@@ -17,7 +17,6 @@
 
     header {
       background: #1e1e2f;
-      font-family: Helvetica, Arial, sans-serif;
       padding: 1rem;
       color: white;
       font-size: 1.5rem;
@@ -106,7 +105,7 @@
 
     iframe {
       width: 100%;
-      height: auto;
+      height: calc(100vh - 220px); /* full height after load */
       border: none;
       display: none;
     }
@@ -115,8 +114,8 @@
 <body>
 
   <header>
-    
-    <span><b>[antipaywall]</b></span>
+    <img src="[a].png" class="logo" alt="icon">
+    <span>[antipaywall]</span>
   </header>
 
   <div class="search-container">
@@ -195,6 +194,7 @@
       } else {
         placeholder.style.display = 'none';
         iframe.style.display = 'block';
+        iframe.style.height = 'calc(100vh - 220px)';
         iframe.src = finalURL;
       }
     }
