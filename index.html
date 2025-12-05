@@ -19,8 +19,15 @@
       background: #1e1e2f;
       padding: 1rem;
       color: white;
-      text-align: center;
       font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    header img.logo {
+      height: 40px;
+      width: auto;
     }
 
     .search-container {
@@ -79,16 +86,38 @@
       color: white;
     }
 
-    iframe {
+    #viewerWrapper {
       flex: 1;
-      border: none;
       width: 100%;
+      position: relative;
+      background: #e2e2e2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #placeholderImg {
+      max-width: 420px;
+      opacity: 0.8;
+    }
+
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <header>[antipaywall]</header>
+  <header>
+    <img src="[a].png" class="logo" alt="icon">
+    <span>[antipaywall]</span>
+  </header>
 
   <div class="search-container">
     <div class="search-bar">
@@ -104,7 +133,10 @@
     </div>
   </div>
 
-  <iframe id="viewerFrame" src=""></iframe>
+  <div id="viewerWrapper">
+    <img id="placeholderImg" src="default.png" alt="Placeholder" />
+    <iframe id="viewerFrame" src=""></iframe>
+  </div>
 
   <script>
     let selectedService = 'wayback';
@@ -124,24 +156,22 @@
     function updateFrame() {
       const url = document.getElementById('urlInput').value.trim();
       const iframe = document.getElementById('viewerFrame');
+      const placeholder = document.getElementById('placeholderImg');
 
       if (!url) {
         alert("Please enter a URL.");
         return;
       }
 
-      // Default: set iframe src
       let finalURL = '';
       let openInNewTab = false;
 
       switch (selectedService) {
         case 'wayback':
-          // Use "web/0/" to get the most recent snapshot
           finalURL = `https://web.archive.org/web/0/${url}`;
           break;
 
         case 'archiveis':
-          // Open in a new about:blank tab
           finalURL = `https://archive.is/?run=1&url=${encodeURIComponent(url)}`;
           openInNewTab = true;
           break;
@@ -163,9 +193,12 @@
           alert("Popup blocked. Please allow popups for this site.");
         }
       } else {
+        placeholder.style.display = 'none';
+        iframe.style.display = 'block';
         iframe.src = finalURL;
       }
     }
   </script>
 </body>
 </html>
+
