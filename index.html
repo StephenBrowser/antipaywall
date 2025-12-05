@@ -16,7 +16,7 @@
     }
 
     header {
-      background: #333344;
+      background: #1e1e2f;
       padding: 1rem;
       color: white;
       font-size: 1.5rem;
@@ -97,8 +97,13 @@
     }
 
     #placeholderImg {
-      max-width: 420px;
-      opacity: 0.8;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
     }
 
     iframe {
@@ -115,8 +120,8 @@
 <body>
 
   <header>
-    <img src="[a].png" class="logo" alt="icon">
-    <span>[antipaywall]</span>
+    
+    <span><b>[antipaywall]</b></span>
   </header>
 
   <div class="search-container">
